@@ -25,6 +25,7 @@
     <title>Inventory Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">  
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/themify-icons.css">
@@ -32,6 +33,7 @@
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/css/slicknav.min.css">
     <!-- amchart css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">  
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- others css -->
     <link rel="stylesheet" href="assets/css/typography.css">
@@ -77,7 +79,11 @@
                                     <span>Item Records</span></a>
                                
                             </li>
-                            
+                            <li>
+                                <a href="management.php" aria-expanded="true"><i class="bi bi-gear"></i>
+                                    <span>Management</span></a> </li>
+                                </ul>
+                            </li>
                            
                         </ul>
                     </nav>
@@ -167,7 +173,7 @@ $column = isset($_GET['column']) && in_array($_GET['column'], $columns) ? $_GET[
 $sort_order = isset($_GET['order']) && strtolower($_GET['order']) == 'desc' ? 'DESC' : 'ASC';
 
 // Get the result...
-if ($result = $mysqli->query('SELECT * FROM products ORDER BY ' .  $column . ' ' . $sort_order)) {
+if ($result = $mysqli->query('SELECT * FROM products  WHERE IsDeleted = 0 ORDER BY ' .  $column . ' ' . $sort_order)) {
 	// Some variables we need for the table.
 	$up_or_down = str_replace(array('ASC','DESC'), array('up','down'), $sort_order); 
 	$asc_or_desc = $sort_order == 'ASC' ? 'desc' : 'asc';
@@ -184,14 +190,17 @@ if ($result = $mysqli->query('SELECT * FROM products ORDER BY ' .  $column . ' '
 			<table >
                 
 				<tr >
-                    <td scope="col">L Name</td>
-                    <td scope="col">S Name</td>
-                    <td scope="col">Details</td>
-                    <td style="size =55px" scope="col">Implementing Office</td>                          
-					<td><a style="color: black; text-decoration: none; text-align: center;"href="table.php?column=status&order=<?php echo $asc_or_desc; ?>">Status<i class="fas fa-sort<?php echo $column == 'status' ? '-' . $up_or_down : ''; ?>"></i></a></td>
-                    <td scope="col">Action</td>
+                    <th scope="col">L Name</th>
+                    <th scope="col">S Name</th>
+                    <th scope="col">Details</th>
+                    <th style="size =55px" scope="col">Implementing Office</th>                          
+					<th><a style="font-size: 100%; color: black; text-decoration: none; text-align: center;"href="table.php?column=status&order=<?php echo $asc_or_desc; ?>">Status<i class="fas fa-sort<?php echo $column == 'status' ? '-' . $up_or_down : ''; ?>"></i></a></th>
+                    <th scope="col">Action</th>
                 </tr>
-				<?php while ($row = $result->fetch_assoc()): ?>
+				
+                
+                
+                <?php while ($row = $result->fetch_assoc()): ?>
 				<tr>
                 <td><?php echo $row["product_name"] ?></td>
                       <td ><?php echo $row["product_sname"] ?></td>
@@ -264,28 +273,29 @@ if ($result = $mysqli->query('SELECT * FROM products ORDER BY ' .  $column . ' '
 				width: 100%;
 			}
 			th {
-				background-color: lightgray;
+				background-color: white;    
 				border: 1px solid black;
+                text-align: center;
+                padding: .1px;
+                background-color: #D8D8D8;
 			}
-			th:hover {
-				background-color: #64686e;
-			}
+			
 			th a {
 				display: block;
 				text-decoration:none;
 				padding: 30px;
-				color: #ffffff;
+				color: #;
 				font-weight: bold;
 				font-size: 13px;
                 
 			}
 			th a i {
 				margin-left: 15px;
-				color: rgba(255,255,255,0.4);
+				color: # rgba(255,255,255,0.4);
                 
 			}
 			td {
-				padding: 50px;
+				padding: 40px;
 				color: black;
                 border: 0.5px solid black;
                         

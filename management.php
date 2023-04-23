@@ -1,60 +1,17 @@
 <?php 
+  session_start(); 
 
-// initializing variables
-$product_name = "";
-$product_sname = "";
-$details     = "";
-$implementing_office   = "";
-$dev_mode   = "";
-$developer   = "";
-$frontend   = "";
-$backend   = "";
-$status   = "";
+  if (!isset($_SESSION['username'])) {
+  	$_SESSION['msg'] = "You must log in first";
+  	header('location: login.php');
+  }
+  if (isset($_GET['logout'])) {
+  	session_destroy();
+  	unset($_SESSION['username']);
+  	header("location: login.php");
+  }
+?>
 
-  include('config.php');
-
-  if (isset($_POST['submit']))
-  {
-  $id=$_POST['id'];
-  $product_name=mysqli_real_escape_string($db, $_POST['product_name']);
-  $product_sname=mysqli_real_escape_string($db, $_POST['product_sname']);
-  $details=mysqli_real_escape_string($db, $_POST['details']);
-  $implementing_office=mysqli_real_escape_string($db, $_POST['implementing_office']);
-  $dev_mode=mysqli_real_escape_string($db, $_POST['dev_mode']);
-  mysqli_query($db,"UPDATE products SET product_name='$product_name', product_sname='$product_sname' ,details='$details', implementing_office='$implementing_office', 
-  dev_mode='$dev_mode'
-  WHERE product_id='$id'");
-  
-  header("Location:index_copy.php");
-  }
-  
-  
-  if (isset($_GET['id']) && is_numeric($_GET['id']) && $_GET['id'] > 0)
-  {
-  
-  $id = $_GET['id'];
-  $result = mysqli_query($db,"SELECT * FROM products WHERE product_id=".$_GET['id']);
-  
-  $row = mysqli_fetch_array($result);
-  
-  if($row)
-  {
-  
-  $id = $row['product_id'];
-  $product_name = $row['product_name'];
-  $product_sname = $row['product_sname'];
-  $details=$row['details'];
-  $implementing_office=$row['implementing_office'];
-  $dev_mode=$row['dev_mode'];
-  }
-  else
-  {
-  echo "No results!";
-  }
-  }
-
-  ?>
-  
 
 
 <!doctype html>
@@ -70,6 +27,7 @@ $status   = "";
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/themify-icons.css">
     <link rel="stylesheet" href="assets/css/metisMenu.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">  
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/css/slicknav.min.css">
     <!-- amchart css -->
@@ -84,11 +42,16 @@ $status   = "";
 </head>
 
 <body>
-
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!-- preloader area start -->
     <div id="preloader">
         <div class="loader"></div>
     </div>
-
+    <!-- preloader area end -->
+    
+    <!-- page container area start -->
     <div class="page-container">
         <!-- sidebar menu area start -->
         <div class="sidebar-menu">
@@ -108,10 +71,15 @@ $status   = "";
                             
                            
                             
-                            <li class="active">
+                            <li>
                                 <a href="table.php" aria-expanded="true"><i class="fa fa-table"></i>
                                     <span>Item Records</span></a>
                                
+                            </li>
+                            <li class="active">
+                                <a href="management.php" aria-expanded="true"><i class="bi bi-gear"></i>
+                                    <span>Management</span></a> </li>
+                                </ul>
                             </li>
                             
                            
@@ -164,21 +132,113 @@ $status   = "";
                                 <li><span>Item Records</span></li>
                             </ul>
                         </div>
-                      <!--  <a href="addproject.php" class="button-submit">Add Project</a> -->
+                        <a href="addproject.php" class="button-submit">Add Project</a>
                     </div>
-       
+                    <!-- LOGOUT OPTION START -->
+                    <!-- <div class="col-sm-6 clearfix">
+                        <div class="user-profile pull-right">
+                            <img class="avatar user-thumb" src="assets/images/author/avatar.png" alt="avatar">
+                            <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['username']; ?> <i class="fa fa-angle-down"></i></h4>
+                            <div class="dropdown-menu">
+                                
+                               <a class="dropdown-item" href="index.php?logout='1'">Log Out</a>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- LOGOUT OPTION END   -->
+
                 </div>
             </div>
             <!-- page title area end -->
+            <div>
             
-            <select multiple>
-  <option value="option1">Option 1</option>
-  <option value="option2">Option 2</option>
-  <option value="option3">Option 3</option>
-  <option value="option4">Option 4</option>
-</select>
-            
-                    
+     <!-- <h1 style="text-align:center">Add Item Here</h1>
+            <body>
+<form method="POST" class="form-inline" action="additem.php">
+  <div class="form-group">
+    <label for="name">L Name</label>
+    <input type="text" class="form-control" name="product_name">
+    
+  </div>
+  <div class="form-group">
+    <label for="name">S Name</label>
+    <input type="text" class="form-control" name="product_sname">
+    
+  </div>
+  <div class="form-group">
+    <label for="name">Price</label>
+    <input type="text" class="form-control" name="price">
+  </div>
+  <div class="form-group">
+        <label for="name">Quantity</label>
+        <input type="text" class="form-control" name="quantity" >
+    </div>
+  <button type="submit" class="btn btn-default" name="add">Add item</button>
+ 
+</form> 
+</body> -->
+            <div class="main-content-inner">
+                <div class="row">
+                   
+                    <!-- Contextual Classes start -->
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">Products</h4>
+                                <div class="single-table">
+                                    <div class="table-responsive">
+                                        <table class="table text-dark text-center">
+                                            <thead class="text-uppercase">
+                                                <tr class="table-active">
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">L Name</th>
+                                                    <th scope="col">S Name</th>
+                                                    <th scope="col">Details</th>
+                                                    <th scope="col">Implementing Office</th>
+                                                    <!-- <th scope="col">Development Mode</th> -->
+													<th scope="col">Action</th>                   
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+			<?php 
+               $conn = new mysqli("localhost","root","","inventorymanagement");
+               $sql = "SELECT * FROM products";
+               $result = $conn->query($sql);
+					$count=0;
+               if ($result -> num_rows >  0) {
+				  
+                 while ($row = $result->fetch_assoc()) 
+				 {
+					  $count=$count+1;
+                   ?>
+                   <tr>
+                    <th><?php echo $count ?></th>
+                      <th><?php echo $row["product_name"] ?></th>
+                      <th><?php echo $row["product_sname"] ?></th>
+                      <th><?php echo $row["details"]  ?></th>
+                      <th><?php echo $row["implementing_office"]  ?></th>
+                      
+					  <th> <a href="up"Edit</a><a href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a> <a href="up"Edit</a><a href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a href="tablecopy.php?id=<?php echo $row["product_id"] ?>"> View</a></th>
+                    </tr>
+            <?php
+                 
+                 }
+               }
+
+            ?>
+
+                                            </tbody>
+                                        </table>
+           
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+
+
+</div>   
+                    </div>
                     <!-- Contextual Classes end -->
                    
         <!-- main content area end -->
@@ -250,89 +310,5 @@ $status   = "";
         background: #3C685A;
         text-decoration: none;
         color: #fff; }
-    }
-
-input[type=text], select, textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: vertical;
-}
-
-label {
-  padding: 12px 12px 12px 0;
-  display: inline-block;
-}
-
-input[type=submit] {
-  background-color: #04AA6D;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  float: right;
-}
-
-input[type=submit]:hover {
-  background-color: #45a049;
-}
-
-.container1 {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
-}
-
-.col-25 {
-  float: left;
-  width: 25%;
-  margin-top: 6px;
-}
-
-.col-75 {
-  float: left;
-  width: 65%;
-  margin-top: 6px;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-select {
-  width: 200px;
-  height: 30px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px;
-  background-color: #fff;
-  font-size: 14px;
-  color: #444;
-  cursor: pointer;
-}
-
-select option {
-  padding: 5px;
-}
-
-select option:hover {
-  background-color: #f5f5f5;
-}
-
-select option:checked {
-  background-color: #ddd;
-}
-
-/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .col-25, .col-75, input[type=submit] {
-    width: 100%;
-    margin-top: 0;
-  }
-}
 </style>
 </html>

@@ -1,39 +1,64 @@
-<?php 
-  session_start(); 
+<?php
+// Check existence of id parameter before processing further
+if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+    // Include config file
+    require_once "config.php";
 
-  if (!isset($_SESSION['username'])) {
-  	$_SESSION['msg'] = "You must log in first";
-  	header('location: login.php');
-  }
-  if (isset($_GET['logout'])) {
-  	session_destroy();
-  	unset($_SESSION['username']);
-	unset($_SESSION['first_name']);
-	unset($_SESSION['last_name']);
-	header("location: table.php");
-  }
+    // Prepare a select statement
+    $sql = "SELECT * FROM products WHERE product_id = ?";
+
+    if($stmt = mysqli_prepare($link, $sql)){
+        // Bind variables to the prepared statement as parameters
+        mysqli_stmt_bind_param($stmt, "i", $param_id);
+
+        // Set parameters
+        $param_id = trim($_GET["id"]);
+
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $result = mysqli_stmt_get_result($stmt);
+
+            if(mysqli_num_rows($result) == 1){
+                /* Fetch result row as an associative array. Since the
+result set
+                contains only one row, we don't need to use while loop */
+                $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+                // Retrieve individual field value
+                $product_name = $row["product_name"];
+                $product_sname = $row["product_sname"];
+                $details = $row["details"];
+                $implementing_office = $row["implementing_office"];
+                $dev_mode = $row["dev_mode"];
+                $developer = $row["developer"];
+                $frontend = $row["frontend"];
+                $backend = $row["backend"];
+                $status = $row["status"];
+                $remarks = $row["remarks"];
+                $serverhid = $row["serverhid"];
+            } else{
+                // URL doesn't contain valid id parameter. Redirect to
+
+                header("location: error.php");
+                exit();
+            }
+        } else{
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+    }
+
+    // Close statement
+    mysqli_stmt_close($stmt);
+
+    // Close connection
+    mysqli_close($link);
+} else{
+    // URL doesn't contain id parameter. Redirect to error page
+    header("location: error.php");
+    exit();
+}
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-	<link rel="stylesheet" href="Inventmng/srtdash/assets/bootstrap.min.css">
-</head>
-<body>
-
-<div class="content">
-  	<!-- notification message -->
-  	<?php if (isset($_SESSION['success'])) : ?>
-      <div class="error success" >
-      	<h3>
-          <?php 
-          	echo $_SESSION['success']; 
-          	unset($_SESSION['success']);
-          ?>
-      	</h3>
-      </div>
-  	<?php endif ?>
+?>
 
     <!-- logged in user information -->
    
@@ -113,7 +138,7 @@ body {
 								! -->
                             </li>
                             <li>
-                                <a href="table.php" aria-expanded="true"><i class="bi bi-gear"></i>
+                                <a href="management.php" aria-expanded="true"><i class="bi bi-gear"></i>
                                     <span>Management</span></a> </li>
                                 </ul>
                             </li>
@@ -155,40 +180,76 @@ body {
             </div>
             <!-- header area end -->
             <!-- page title area start -->
-            <div class="page-title-area">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <div class="breadcrumbs-area clearfix">
-                            <h4 class="page-title pull-left">Dashboard</h4>
-                            <ul class="breadcrumbs pull-left">
-                                <li><a href="index.php">Home</a></li>
-                                <li><span>Dashboard</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 clearfix">
-                        <div class="user-profile pull-right">
-                            <img class="avatar user-thumb" src="assets/images/author/avatar.png" alt="avatar">
-                            <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['username']?> <i class="fa fa-angle-down"></i></h4>
-                            <div class="dropdown-menu">
-                                 
-							<a class="dropdown-item" href="index.php?logout='1'">Log Out</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <!-- page title area end -->
           <div>
 		
-		 <?php  if (isset($_SESSION['first_name']) ) : ?>
-		<h2 style="text-align:center"> Welcome <strong><?php echo $_SESSION['first_name']; echo " " ;echo $_SESSION['last_name'];?></strong></h2>
-		
-		<?php endif ?>
-		
-		
-		</div>
+          <div class="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="mt-5 mb-3">View Record</h1>
+                    <div class="form-group">
+                        <label>Long Name:</label>
+                        <p><b><?php echo $row["product_name"]; ?></b></p>
+                        <hr>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Short Name:</label>
+                        <p><b><?php echo $row["product_sname"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Details:</label>
+                        <p><b><?php echo $row["details"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Implementing Office:</label>
+                        <p><b><?php echo $row["implementing_office"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Development Mode:</label>
+                        <p><b><?php echo $row["dev_mode"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Developer:</label>
+                        <p><b><?php echo $row["developer"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Front-end:</label>
+                        <p><b><?php echo $row["frontend"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Back-end:</label>
+                        <p><b><?php echo $row["backend"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <p><b><?php echo $row["status"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Remarks:</label>
+                        <p><b><?php echo $row["remarks"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <div class="form-group">
+                        <label>Server Host ID:</label>
+                        <p><b><?php echo $row["serverhid"]; ?></b></p>
+                        <hr>
+                    </div>
+                    <a href="table.php" class="button-submit">Back</a>
+                </div>
+            </div>
         </div>
+    </div>
 		
         <!-- main content area end -->
     </div>

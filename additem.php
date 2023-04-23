@@ -23,7 +23,6 @@ $dev_mode   = "";
 $developer   = "";
 $front   = "";
 $frontstr = "";
-$frontend ="";
 $backend   = "";
 $status   = "";
 $remarks   = "";

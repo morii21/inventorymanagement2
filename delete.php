@@ -11,7 +11,7 @@ if (mysqli_connect_errno())
 if (isset($_GET['id']))
 {
 
-$result = mysqli_query($db,"DELETE FROM products WHERE product_id=".$_GET['id']);
+$result = mysqli_query($db,"UPDATE products SET IsDeleted = 1 WHERE product_id=".$_GET['id']);
 if($result==true)
 	echo "sucess";
 header("Location:table.php");

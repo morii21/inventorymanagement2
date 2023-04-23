@@ -1,82 +1,78 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <title>multiselect</title>
-    <script type="text/javascript" src="multiselect-dropdown.js"></script>
 
-</head> 
-<body>
 
-  <div class="multiselect">
-    <div class="selectBox" onclick="showCheckboxes()">
-      <select>
-        <option>Select an option</option>
-      </select>
-      <div class="overSelect"></div>
-    </div>
-    <div id="checkboxes">
-      <label for="one">
-        <input type="checkbox" id="one" />First checkbox</label>
-      <label for="two">
-        <input type="checkbox" id="two" />Second checkbox</label>
-      <label for="three">
-        <input type="checkbox" id="three" />Third checkbox</label>
-    </div>
-  </div>
-<script>
-    var expanded = false;
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
-function showCheckboxes() {
-  var checkboxes = document.getElementById("checkboxes");
-  if (!expanded) {
-    checkboxes.style.display = "block";
-    expanded = true;
-  } else {
-    checkboxes.style.display = "none";
-    expanded = false;
+<style type="text/css">  
+  select{
+    width: 90em;
   }
-}
-    </script>
+ </style>
 
-</body>
+<div class="container-fluid"style="text-align: center;margin-bottom:200px;">
+<h1>Demo Multiselect Box In PHP</h1>
+<div class="row">
+<div class="col-md-12" >
+
+<form id="myForm" method="POST">
+
+<div class="col-md-12" >
 
 
-</html>
-<style>
-   .multiselect {
-  width: 200px;
-}
+ <?php
+			// Establish database connection
+			$conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
 
-.selectBox {
-  position: relative;
-}
+			// Fetch data from the database
+			$sql = "SELECT id, name FROM frontend";
+			$result = mysqli_query($conn, $sql);
 
-.selectBox select {
-  width: 100%;
-  font-weight: bold;
-}
+			// Create dropdown checkbox form
+			echo '<form>';
+			echo '<select name="skills" id="skills" class="form-control selectpicker" data-live-search="true" multiple>';
 
-.overSelect {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
+			// Populate the dropdown checkbox list with data
+			foreach ($result as $row) {
+				echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
+			}
 
-#checkboxes {
-  display: none;
-  border: 1px #dadada solid;
-}
+			echo '</select>';
+			echo '</form>';
+			?>
+        </div>
+      </div>
+ </div><div class="col-md-12" style="margin-top:20px;" >
+ <input type="submit" value="Submit" ></div>
+</form></div></div></div>
 
-#checkboxes label {
-  display: block;
-}
+<script>
+$(document).ready(function() {       
+	$('#current_select').multiselect({		
+		nonSelectedText: 'Select Current values'				
+	});
+});
 
-#checkboxes label:hover {
-  background-color: #1e90ff;
-}
-    </style>
+$(function () {
+
+ 
+ $('#current_select').multiselect({ 
+ buttonText: function(options, select) {
+ var labels = [];
+ console.log(options);
+ options.each(function() {
+ labels.push($(this).val());
+ });
+ $("#current_select_values").val(labels.join(',') + '');
+ return labels.join(', ') + '';
+ //}
+ }
+ 
+ });
+});
+</script>
+
+<?php print_r ($_POST['current_select']); ?>

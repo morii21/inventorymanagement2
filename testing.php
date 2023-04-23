@@ -1,62 +1,11 @@
 <?php
 session_start();
 ?>
-
-<!doctype html>
-<html class="no-js" lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Inventory Management System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-  <link rel="stylesheet" href="assets/css/themify-icons.css">
-  <link rel="stylesheet" href="assets/css/metisMenu.css">
-  <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-  <link rel="stylesheet" href="assets/css/slicknav.min.css">
-  <!-- amchart css -->
-  <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-  <!-- others css -->
-  <link rel="stylesheet" href="assets/css/typography.css">
-  <link rel="stylesheet" href="assets/css/default-css.css">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
-  <!-- modernizr css -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
-  <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <script language="javascript" type="text/javascript" name="developer">
-    function dynamicdropdown(listindex) {
-      switch (listindex) {
-        case "In-house":
-          document.getElementById("developer").options[0] = new Option("Select Developer", "");
-          document.getElementById("developer").options[1] = new Option("Jazmine", "Jazmine");
-          document.getElementById("developer").options[2] = new Option("Edlar", "Edlar");
-          break;
-        case "Outsource":
-          document.getElementById("developer").options[0] = new Option("Select Developer", "");
-          document.getElementById("developer").options[1] = new Option("John Christian", "John Christian");
-          document.getElementById("developer").options[2] = new Option("Nicole", "Nicole");
-          document.getElementById("developer").options[3] = new Option("Angelika", "Angelika");
-          break;
-      }
-      return true;
-    }
-  </script>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-</head>
 
 <h1 style="text-align:center">Add Item Here</h1>
 <div class="container1">
@@ -117,30 +66,6 @@ session_start();
           <label for="lname">Select Developer...</label>
         </div>
         <div class="col-75">
-          <script name="developer" type="text/javascript" language="JavaScript">
-            document.write('<select name="developer" for="developer" id="developer"><option value="" disabled selected>Select Developer</option></select>')
-          </script>
-          <noscript>
-            <select id="developer" name="developer">
-              <option value="Jazmine"></option>
-              <option value="Edlar"></option>
-              <option value="John Christian"></option>
-              <option value="Nicole"></option>
-              <option value="Angelika"></option>
-
-            </select>
-          </noscript>
-        </div>
-      </div>
-
-      <!-- MULTIPLE SELECTION START -->
-
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Front-end</label>
-        </div>
-        <div class="col-75">
-
           <?php
           // Establish database connection
           $conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
@@ -152,7 +77,7 @@ session_start();
           // Create dropdown checkbox form
           echo '<form>';
 
-          echo '<select name="skills" id="skills" class="form-control selectpicker" data-live-search="true" multiple multiple title="Select Front-End...">';
+          echo '<select name="skills" id="skills" class="form-control selectpicker" data-live-search="true" multiple>';
 
           // Populate the dropdown checkbox list with data
           foreach ($result as $row) {
@@ -162,37 +87,85 @@ session_start();
           echo '</select>';
           echo '</form>';
           ?>
+        </div>
+      </div>
+
+      <script>
+
+    $(document).ready(function(){
+     $('.selectpicker').selectpicker();
+     
+     $('#skills').change(function(){
+      $('#hidden_skills').val($('#skills').val());
+     });
+     
+     $('#multiple_select_form').on('submit', function(event){
+      event.preventDefault();
+      if($('#skills').val() != '')
+      {
+       var form_data = $(this).serialize();
+       $.ajax({
+        url:"insert.php",
+        method:"POST",
+        data:form_data,
+        success:function(data)
+        {
+         //console.log(data);
+         $('#hidden_skills').val('');
+         $('.selectpicker').selectpicker('val', '');
+         alert(data);
+        }
+       })
+      }
+      else
+      {
+       alert("Please select framework");
+       return false;
+      }
+     });
+    });
+    </script>
+      <!-- MULTIPLE SELECTION START -->
+
+      <div class="row">
+        <div class="col-25">
+          <label for="lname">Front-end</label>
+        </div>
+        <div class="col-75">
+
+          <div class="selectBox" onclick="showCheckboxes()">
+            <select>
+              <option value="" disabled selected>Select Front-end upto 5 tags..</option>
+            </select>
+            <div class="overSelect"></div>
+          </div>
+          <div id="checkboxes">
+            <label for="PHP">
+              <input type="checkbox" name="frontend[]" id="PHP" value="PHP" />PHP</label>
+            <label for="Python">
+              <input type="checkbox" name="frontend[]" id="Python" value="Python" />Python</label>
+            <label for="Java">
+              <input type="checkbox" name="frontend[]" id="Java" value="Java" />Java</label>
+            <label for=".Net">
+              <input type="checkbox" name="frontend[]" id=".Net" value=".Net" />.Net</label>
+            <label for="MS SQL">
+              <input type="checkbox" name="frontend[]" id="MS SQL" value="MS SQL" />MS SQL</label>
+            <label for="Ruby">
+              <input type="checkbox" name="frontend[]" id="Ruby" value="Ruby" />Ruby</label>
+          </div>
           <script>
+            var expanded = false;
 
-            $(document).ready(function () {
-              $('.selectpicker').selectpicker();
-
-              $('#skills').change(function () {
-                $('#hidden_skills').val($('#skills').val());
-              });
-
-              $('#multiple_select_form').on('submit', function (event) {
-                event.preventDefault();
-                if ($('#skills').val() != '') {
-                  var form_data = $(this).serialize();
-                  $.ajax({
-                    url: "insert.php",
-                    method: "POST",
-                    data: form_data,
-                    success: function (data) {
-                      //console.log(data);
-                      $('#hidden_skills').val('');
-                      $('.selectpicker').selectpicker('val', '');
-                      alert(data);
-                    }
-                  })
-                }
-                else {
-                  alert("Please select framework");
-                  return false;
-                }
-              });
-            });
+            function showCheckboxes() {
+              var checkboxes = document.getElementById("checkboxes");
+              if (!expanded) {
+                checkboxes.style.display = "block";
+                expanded = true;
+              } else {
+                checkboxes.style.display = "none";
+                expanded = false;
+              }
+            }
           </script>
         </div>
       </div>
@@ -433,14 +406,14 @@ session_start();
     float: left;
     width: 25%;
     margin-top: 6px;
-    font-size: 18px
+    font-size: 18px;
   }
 
   .col-75 {
     float: left;
     width: 65%;
     margin-top: 6px;
-    font-size: 16px
+    font-size: 18px
   }
 
   /* Clear floats after the columns */
@@ -460,32 +433,9 @@ session_start();
       margin-top: 0;
     }
   }
-  .bootstrap-select > .btn {
-    font-size: 16px; /* Replace with your desired font size */
-}
-.bootstrap-select > .dropdown-menu li a {
-    font-size: 16px; /* Replace with your desired font */
-}
-
+    select{
+    width: 60.6em;
+  }
 </style>
 
 </html>
-
-</div>
-<!-- page container area end -->
-<!-- offset area start -->
-
-<!-- offset area end -->
-<!-- jquery latest version -->
-<script src="assets/js/vendor/jquery-2.2.4.min.js"></script>
-<!-- bootstrap 4 js -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/owl.carousel.min.js"></script>
-<script src="assets/js/metisMenu.min.js"></script>
-<script src="assets/js/jquery.slimscroll.min.js"></script>
-<script src="assets/js/jquery.slicknav.min.js"></script>
-
-<!-- others plugins -->
-<script src="assets/js/plugins.js"></script>
-<script src="assets/js/scripts.js"></script>
