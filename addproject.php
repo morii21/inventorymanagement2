@@ -53,8 +53,7 @@ session_start();
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 </head>
 
@@ -101,8 +100,7 @@ session_start();
           <label for="lname">Select Development Mode</label>
         </div>
         <div class="col-75">
-          <select id="source" name="dev_mode"
-            onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
+          <select id="source" name="dev_mode" onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
             <option value="" disabled selected>Select Development Mode</option>
             <option value="In-house">In-house</option>
             <option value="Outsource">Outsource</option>
@@ -141,59 +139,22 @@ session_start();
         </div>
         <div class="col-75">
 
-          <?php
-          // Establish database connection
-          $conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
+          <select name="frontend[]" id="skills" class="form-control selectpicker" data-live-search="true" multiple multiple title="Select Front-End...">
+            <?php
+            // Connect to MySQL database
+            $conn = mysqli_connect("localhost", "root", "", "inventorymanagement");
 
-          // Fetch data from the database
-          $sql = "SELECT id, name FROM frontend";
-          $result = mysqli_query($conn, $sql);
+            // Retrieve options from database
+            $result = mysqli_query($conn, "SELECT id, name FROM frontend");
+            while ($row = mysqli_fetch_assoc($result)) {
+              // Display each option in the dropdown list
+              echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+            }
 
-          // Create dropdown checkbox form
-          echo '<form>';
 
-          echo '<select name="skills" id="skills" class="form-control selectpicker" data-live-search="true" multiple multiple title="Select Front-End...">';
 
-          // Populate the dropdown checkbox list with data
-          foreach ($result as $row) {
-            echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
-          }
-
-          echo '</select>';
-          echo '</form>';
-          ?>
-          <script>
-
-            $(document).ready(function () {
-              $('.selectpicker').selectpicker();
-
-              $('#skills').change(function () {
-                $('#hidden_skills').val($('#skills').val());
-              });
-
-              $('#multiple_select_form').on('submit', function (event) {
-                event.preventDefault();
-                if ($('#skills').val() != '') {
-                  var form_data = $(this).serialize();
-                  $.ajax({
-                    url: "insert.php",
-                    method: "POST",
-                    data: form_data,
-                    success: function (data) {
-                      //console.log(data);
-                      $('#hidden_skills').val('');
-                      $('.selectpicker').selectpicker('val', '');
-                      alert(data);
-                    }
-                  })
-                }
-                else {
-                  alert("Please select framework");
-                  return false;
-                }
-              });
-            });
-          </script>
+            ?>
+          </select>
         </div>
       </div>
 
@@ -254,7 +215,7 @@ session_start();
             $result = mysqli_query($conn, "SELECT id, stat FROM options");
             while ($row = mysqli_fetch_assoc($result)) {
               // Display each option in the dropdown list
-              echo "<option value='{$row['id']}'>{$row['stat']}</option>";
+              echo "<option value='{$row['stat']}'>{$row['stat']}</option>";
             }
             ?>
           </select>
@@ -290,8 +251,7 @@ session_start();
 <head>
   <title>Add Item</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-    integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 </head>
 
 <style>
@@ -460,13 +420,16 @@ session_start();
       margin-top: 0;
     }
   }
-  .bootstrap-select > .btn {
-    font-size: 16px; /* Replace with your desired font size */
-}
-.bootstrap-select > .dropdown-menu li a {
-    font-size: 16px; /* Replace with your desired font */
-}
 
+  .bootstrap-select>.btn {
+    font-size: 16px;
+    /* Replace with your desired font size */
+  }
+
+  .bootstrap-select>.dropdown-menu li a {
+    font-size: 16px;
+    /* Replace with your desired font */
+  }
 </style>
 
 </html>

@@ -1,261 +1,89 @@
 <?php
-session_start();
-?>
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+// Database configuration
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "inventorymanagement";
 
-<h1 style="text-align:center">Add Item Here</h1>
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+// Check connection
+if (!$conn) {
+  die("Connection failed: " . mysqli_connect_error());
+}
+?>
+
+<h1 style="text-align:center">Management Edit</h1>
 <div class="container1">
 
   <body>
-    <form method="POST" action="additem.php">
-      <div class="row">
-        <div class="col-25">
-          <label for="fname">IS Long Name</label>
-        </div>
-        <div class="col-75">
-          <input type="text" name="product_name" placeholder="Long Name...">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">IS Short Name</label>
-        </div>
-        <div class="col-75">
-          <input type="text" name="product_sname" placeholder="Short Name..">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">IS Description</label>
-        </div>
-        <div class="col-75">
-          <input type="text" name="details" placeholder="Description...">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">IS Implementing Office</label>
-        </div>
-        <div class="col-75">
-          <input type="text" name="implementing_office" placeholder="Implementing Office..">
-        </div>
-      </div>
+    <!------------------------------------ Starting 'ADD' Form --------------------------------------------------------------->
+    <?php
+    // Check if form is submitted
+    if (isset($_POST['submit'])) {
+      // Get form data
+      $name = $_POST['name'];
 
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Select Development Mode</label>
-        </div>
-        <div class="col-75">
-          <select id="source" name="dev_mode"
-            onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
-            <option value="" disabled selected>Select Development Mode</option>
-            <option value="In-house">In-house</option>
-            <option value="Outsource">Outsource</option>
-          </select>
-        </div>
-      </div>
-
-
-
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Select Developer...</label>
-        </div>
-        <div class="col-75">
-          <?php
-          // Establish database connection
-          $conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
-
-          // Fetch data from the database
-          $sql = "SELECT id, name FROM frontend";
-          $result = mysqli_query($conn, $sql);
-
-          // Create dropdown checkbox form
-          echo '<form>';
-
-          echo '<select name="skills" id="skills" class="form-control selectpicker" data-live-search="true" multiple>';
-
-          // Populate the dropdown checkbox list with data
-          foreach ($result as $row) {
-            echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
-          }
-
-          echo '</select>';
-          echo '</form>';
-          ?>
-        </div>
-      </div>
-
-      <script>
-
-    $(document).ready(function(){
-     $('.selectpicker').selectpicker();
-     
-     $('#skills').change(function(){
-      $('#hidden_skills').val($('#skills').val());
-     });
-     
-     $('#multiple_select_form').on('submit', function(event){
-      event.preventDefault();
-      if($('#skills').val() != '')
-      {
-       var form_data = $(this).serialize();
-       $.ajax({
-        url:"insert.php",
-        method:"POST",
-        data:form_data,
-        success:function(data)
-        {
-         //console.log(data);
-         $('#hidden_skills').val('');
-         $('.selectpicker').selectpicker('val', '');
-         alert(data);
-        }
-       })
+      // Insert data into database
+      $sql = "INSERT INTO frontend (name) VALUES ('$name')";
+      if (mysqli_query($conn, $sql)) {
+        echo "Record added successfully.";
+      } else {
+        echo "Error: " . mysqli_error($conn);
       }
-      else
-      {
-       alert("Please select framework");
-       return false;
-      }
-     });
-    });
-    </script>
-      <!-- MULTIPLE SELECTION START -->
+    }
+    ?>
 
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Front-end</label>
-        </div>
-        <div class="col-75">
+    <!-- Add form -->
+    <form method="post">
+      <label>Name:</label>
+      <input type="text" name="name" required>
 
-          <div class="selectBox" onclick="showCheckboxes()">
-            <select>
-              <option value="" disabled selected>Select Front-end upto 5 tags..</option>
-            </select>
-            <div class="overSelect"></div>
-          </div>
-          <div id="checkboxes">
-            <label for="PHP">
-              <input type="checkbox" name="frontend[]" id="PHP" value="PHP" />PHP</label>
-            <label for="Python">
-              <input type="checkbox" name="frontend[]" id="Python" value="Python" />Python</label>
-            <label for="Java">
-              <input type="checkbox" name="frontend[]" id="Java" value="Java" />Java</label>
-            <label for=".Net">
-              <input type="checkbox" name="frontend[]" id=".Net" value=".Net" />.Net</label>
-            <label for="MS SQL">
-              <input type="checkbox" name="frontend[]" id="MS SQL" value="MS SQL" />MS SQL</label>
-            <label for="Ruby">
-              <input type="checkbox" name="frontend[]" id="Ruby" value="Ruby" />Ruby</label>
-          </div>
-          <script>
-            var expanded = false;
-
-            function showCheckboxes() {
-              var checkboxes = document.getElementById("checkboxes");
-              if (!expanded) {
-                checkboxes.style.display = "block";
-                expanded = true;
-              } else {
-                checkboxes.style.display = "none";
-                expanded = false;
-              }
-            }
-          </script>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Back-end</label>
-        </div>
-        <div class="col-75">
-          <div class="selectBox" onclick="showCheckboxes1()">
-            <select>
-              <option disabled selected>Select back-end upto 5 tags..</option>
-            </select>
-            <div class="overSelect"></div>
-          </div>
-          <div id="checkboxes1">
-            <label for="MySQL">
-              <input type="checkbox" name="backend[]" id="MySQL" value="MySQL" />PHP</label>
-            <label for="Firebase">
-              <input type="checkbox" name="backend[]" id="Firebase" value="Firebase" />Firebase</label>
-            <label for="Mariadb">
-              <input type="checkbox" name="backend[]" id="Mariadb" value="Mariadb" />Mariadb</label>
-            <label for="JavaScript">
-              <input type="checkbox" name="backend[]" id="JavaScript" value="JavaScript" />JavaScript</label>
-            <label for="C#">
-              <input type="checkbox" name="backend[]" id="C#" value="C#" />C#</label>
-            <label for="Ruby1">
-              <input type="checkbox" name="backend[]" id="Ruby1" value="Ruby" />Ruby</label>
-          </div>
-          <script>
-            var expanded = false;
-
-            function showCheckboxes1() {
-              var checkboxes = document.getElementById("checkboxes1");
-              if (!expanded) {
-                checkboxes.style.display = "block";
-                expanded = true;
-              } else {
-                checkboxes.style.display = "none";
-                expanded = false;
-              }
-            }
-          </script>
-        </div>
-      </div>
-      <!-- MULTIPLE SELECTION END -->
-      <div class="row">
-        <div class="col-25">
-          <label for="country">IS Status</label>
-        </div>
-        <div class="col-75">
-          <select name="status">
-            <option disabled selected>Select Status...</option>
-            <?php
-            // Connect to MySQL database
-            $conn = mysqli_connect("localhost", "root", "", "inventorymanagement");
-
-            // Retrieve options from database
-            $result = mysqli_query($conn, "SELECT id, stat FROM options");
-            while ($row = mysqli_fetch_assoc($result)) {
-              // Display each option in the dropdown list
-              echo "<option value='{$row['id']}'>{$row['stat']}</option>";
-            }
-            ?>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="subject">Remarks</label>
-        </div>
-        <div class="col-75">
-          <textarea name="remarks" placeholder="Write something.." style="height:100px"></textarea>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Server Host ID</label>
-        </div>
-        <div class="col-75">
-          <input type="text" name="serverhid" placeholder="Server Host ID...">
-        </div>
-      </div>
-      <div class="row">
-
-        <button type="submit" class="button-submit" name="add">Add item</button>
-
-        <button type="button" class="button-submit" onclick="window.history.back();">Cancel</button>
-
+      <input type="submit" name="submit" value="Add">
     </form>
+    <!----------------------------------- Starting 'DELETE' Form -------------------------------------->
+    <?php
+    // Check if delete button is clicked
+    if (isset($_GET['delete'])) {
+      $id = $_GET['delete'];
+
+      // Delete record from database
+      $sql = "DELETE FROM frontend WHERE id=$id";
+      if (mysqli_query($conn, $sql)) {
+        echo "Record deleted successfully.";
+      } else {
+        echo "Error: " . mysqli_error($conn);
+      }
+    }
+    ?>
+
+    <!-- Table -->
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+      <?php
+      // Retrieve data from database
+      $sql = "SELECT * FROM frontend";
+      $result = mysqli_query($conn, $sql);
+
+      // Display data in table
+      while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $row['id'] . "</td>";
+        echo "<td>" . $row['name'] . "</td>";
+        echo "<td><a href='?delete=" . $row['id'] . "'>Delete</a></td>";
+        echo "<td><a href='editfront.php?id=" . $row['id'] . "'>Edit</a></td>";
+        echo "</tr>";
+      }
+      ?>
+
+    </table>
+
+    <!------------------------- Starting 'EDIT' Form --------------------------------------->
+
   </body>
 </div>
 <html>
@@ -263,8 +91,7 @@ session_start();
 <head>
   <title>Add Item</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-    integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 </head>
 
 <style>
@@ -433,7 +260,8 @@ session_start();
       margin-top: 0;
     }
   }
-    select{
+
+  select {
     width: 60.6em;
   }
 </style>
