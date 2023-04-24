@@ -79,7 +79,7 @@ if (isset($_GET['logout'])) {
                 <a href="table.php" aria-expanded="true"><i class="bi bi-gear"></i>
                   <span>Management</span></a>
                 <ul class="collapse">
-                  <li class="active"><a href="editfront.php">Edit Frontend</a></li>
+                  <li class="active"><a href="editfront.php">Edit Backend</a></li>
                   <li><a href="table-layout.html">table layout</a></li>
                   <li><a href="datatable.html">datatable</a></li>
                 </ul>
@@ -157,7 +157,7 @@ if (isset($_GET['logout'])) {
                     <div class="table-responsive">
 
 
-                
+                    
 
                       <h1 style="text-align:center">Management Edit</h1>
                       <div class="container1">
@@ -174,7 +174,7 @@ if (isset($_GET['logout'])) {
                           // Add function
                           if (isset($_POST['add'])) {
                             $name = $_POST['name'];
-                            $sql = "INSERT INTO frontend (name) VALUES ('$name')";
+                            $sql = "INSERT INTO subcategories (name) VALUES ('$name')";
                             if (mysqli_query($conn, $sql)) {
                               echo "Record added successfully.";
                             } else {
@@ -185,7 +185,7 @@ if (isset($_GET['logout'])) {
                           // Delete function
                           if (isset($_GET['delete'])) {
                             $id = $_GET['delete'];
-                            $sql = "DELETE FROM frontend WHERE id=$id";
+                            $sql = "DELETE FROM subcategories WHERE id=$id";
                             mysqli_query($conn, $sql);
                           }
 
@@ -193,12 +193,12 @@ if (isset($_GET['logout'])) {
                           if (isset($_POST['edit'])) {
                             $id = $_POST['id'];
                             $name = $_POST['name'];
-                            $sql = "UPDATE frontend SET name='$name' WHERE id=$id";
+                            $sql = "UPDATE subcategories SET name='$name' WHERE id=$id";
                             mysqli_query($conn, $sql);
                           }
 
                           // Retrieve data
-                          $sql = "SELECT * FROM frontend";
+                          $sql = "SELECT * FROM subcategories";
                           $result = mysqli_query($conn, $sql);
 
                           ?>
@@ -206,13 +206,13 @@ if (isset($_GET['logout'])) {
                           <html>
 
                           <head>
-                            <title>Frontend Management Table</title>
+                            <title>Developer Management Table</title>
                           </head>
 
                           <body>
                             <div class="container">
                               <div class="form-container">
-                                <h2>Frontend Table</h2>
+                                <h2>Developer Table</h2>
                                 <table>
                                   <tr>
                                     <th>Name</th>
@@ -224,9 +224,9 @@ if (isset($_GET['logout'])) {
                                         <?php echo $row['name']; ?>
                                       </td>
                                       <td>
-                                        <a href="editfront.php?delete=<?php echo $row['id']; ?>"
+                                        <a href="editdeveloperphp?delete=<?php echo $row['id']; ?>"
                                           onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
-                                        <a href="editconfig_front.php?id=<?php echo $row['id']; ?>">Edit</a>
+                                        <a href="editconfig_developer.php?id=<?php echo $row['id']; ?>">Edit</a>
                                       </td>
                                     </tr>
                                   <?php } ?>
@@ -234,8 +234,8 @@ if (isset($_GET['logout'])) {
                               </div>
 
                               <div class="result-container">
-                                <h2>Add New Record to 'frontend'</h2>
-                                <form method="post" action="editfront.php">
+                                <h2>Add New Record to 'Developer'</h2>
+                                <form method="post" action="editdeveloperphp.php">
                                   <label>Name:</label>
                                   <input type="text" name="name" required><br><br>
                                   <input type="submit" name="add" value="Add">

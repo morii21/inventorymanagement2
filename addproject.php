@@ -53,7 +53,8 @@ session_start();
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 </head>
 
@@ -100,11 +101,27 @@ session_start();
           <label for="lname">Select Development Mode</label>
         </div>
         <div class="col-75">
-          <select id="source" name="dev_mode" onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
-            <option value="" disabled selected>Select Development Mode</option>
-            <option value="In-house">In-house</option>
-            <option value="Outsource">Outsource</option>
+
+          <select name="dev_mode" id="main_category">
+
+            <?php
+            // Connect to database
+            $conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
+            if (!$conn) {
+              die('Could not connect: ' . mysqli_error());
+            }
+            // Query main category table and generate options
+            $query = "SELECT * FROM categories";
+            $result = mysqli_query($conn, $query);
+            $options = '<option value="">Select Category</option>';
+            while ($row = mysqli_fetch_assoc($result)) {
+              $options .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+            }
+            echo $options;
+            mysqli_close($conn);
+            ?>
           </select>
+
         </div>
       </div>
 
@@ -115,19 +132,26 @@ session_start();
           <label for="lname">Select Developer...</label>
         </div>
         <div class="col-75">
-          <script name="developer" type="text/javascript" language="JavaScript">
-            document.write('<select name="developer" for="developer" id="developer"><option value="" disabled selected>Select Developer</option></select>')
-          </script>
-          <noscript>
-            <select id="developer" name="developer">
-              <option value="Jazmine"></option>
-              <option value="Edlar"></option>
-              <option value="John Christian"></option>
-              <option value="Nicole"></option>
-              <option value="Angelika"></option>
 
-            </select>
-          </noscript>
+          <select name="developer" id="sub_category">
+            <option value="" disabled selected>Select a subcategory</option>
+          </select>
+          <script>
+            $(document).ready(function () {
+              $('#main_category').change(function () {
+                var mainCategoryId = $(this).val();
+                $.ajax({
+                  type: 'POST',
+                  url: 'get_subcategory.php',
+                  data: { 'category_id': mainCategoryId },
+                  success: function (response) {
+                    $('#sub_category').html(response);
+                  }
+                });
+              });
+            });
+          </script>
+
         </div>
       </div>
 
@@ -139,7 +163,8 @@ session_start();
         </div>
         <div class="col-75">
 
-          <select name="frontend[]" id="skills" class="form-control selectpicker" data-live-search="true" multiple multiple title="Select Front-End...">
+          <select name="frontend[]" id="skills" class="form-control selectpicker" data-live-search="true" multiple
+            multiple title="Select Front-End...">
             <?php
             // Connect to MySQL database
             $conn = mysqli_connect("localhost", "root", "", "inventorymanagement");
@@ -163,40 +188,23 @@ session_start();
           <label for="lname">Back-end</label>
         </div>
         <div class="col-75">
-          <div class="selectBox" onclick="showCheckboxes1()">
-            <select>
-              <option disabled selected>Select back-end upto 5 tags..</option>
-            </select>
-            <div class="overSelect"></div>
-          </div>
-          <div id="checkboxes1">
-            <label for="MySQL">
-              <input type="checkbox" name="backend[]" id="MySQL" value="MySQL" />PHP</label>
-            <label for="Firebase">
-              <input type="checkbox" name="backend[]" id="Firebase" value="Firebase" />Firebase</label>
-            <label for="Mariadb">
-              <input type="checkbox" name="backend[]" id="Mariadb" value="Mariadb" />Mariadb</label>
-            <label for="JavaScript">
-              <input type="checkbox" name="backend[]" id="JavaScript" value="JavaScript" />JavaScript</label>
-            <label for="C#">
-              <input type="checkbox" name="backend[]" id="C#" value="C#" />C#</label>
-            <label for="Ruby1">
-              <input type="checkbox" name="backend[]" id="Ruby1" value="Ruby" />Ruby</label>
-          </div>
-          <script>
-            var expanded = false;
 
-            function showCheckboxes1() {
-              var checkboxes = document.getElementById("checkboxes1");
-              if (!expanded) {
-                checkboxes.style.display = "block";
-                expanded = true;
-              } else {
-                checkboxes.style.display = "none";
-                expanded = false;
-              }
+          <select name="backend[]" id="skills" class="form-control selectpicker" data-live-search="true" multiple
+            multiple title="Select Back-End...">
+            <?php
+            // Connect to MySQL database
+            $conn = mysqli_connect("localhost", "root", "", "inventorymanagement");
+
+            // Retrieve options from database
+            $result = mysqli_query($conn, "SELECT id, name FROM backend");
+            while ($row = mysqli_fetch_assoc($result)) {
+              // Display each option in the dropdown list
+              echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
             }
-          </script>
+
+            ?>
+          </select>
+
         </div>
       </div>
       <!-- MULTIPLE SELECTION END -->
@@ -212,10 +220,10 @@ session_start();
             $conn = mysqli_connect("localhost", "root", "", "inventorymanagement");
 
             // Retrieve options from database
-            $result = mysqli_query($conn, "SELECT id, stat FROM options");
+            $result = mysqli_query($conn, "SELECT id, name FROM options");
             while ($row = mysqli_fetch_assoc($result)) {
               // Display each option in the dropdown list
-              echo "<option value='{$row['stat']}'>{$row['stat']}</option>";
+              echo "<option value='{$row['name']}'>{$row['name']}</option>";
             }
             ?>
           </select>
@@ -251,7 +259,8 @@ session_start();
 <head>
   <title>Add Item</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+    integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 </head>
 
 <style>
@@ -424,11 +433,17 @@ session_start();
   .bootstrap-select>.btn {
     font-size: 16px;
     /* Replace with your desired font size */
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+
   }
 
   .bootstrap-select>.dropdown-menu li a {
     font-size: 16px;
-    /* Replace with your desired font */
+
   }
 </style>
 

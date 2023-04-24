@@ -80,8 +80,14 @@
                                
                             </li>
                             <li>
-                                <a href="management.php" aria-expanded="true"><i class="bi bi-gear"></i>
-                                    <span>Management</span></a> </li>
+                                <a href="table.php" aria-expanded="true"><i class="bi bi-gear"></i>
+                                    <span>Management</span></a>
+                                    <ul class="collapse">
+                                    <li><a href="editdevmode.php">Edit DevMode</a></li>
+                                    <li><a href="editdeveloper.php">Edit Developer</a></li>
+                                    <li><a href="editfront.php">Edit Frontend</a></li>
+                                    <li><a href="editbackend.php">Edit Backend</a></li>
+                                    <li><a href="editstatus.php">Edit Status</a></li>
                                 </ul>
                             </li>
                            
