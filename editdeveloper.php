@@ -78,10 +78,13 @@ if (isset($_GET['logout'])) {
               <li>
                 <a href="table.php" aria-expanded="true"><i class="bi bi-gear"></i>
                   <span>Management</span></a>
-                <ul class="collapse">
-                  <li class="active"><a href="editfront.php">Edit Backend</a></li>
-                  <li><a href="table-layout.html">table layout</a></li>
-                  <li><a href="datatable.html">datatable</a></li>
+                <ul class="collapse" aria-expanded="true">
+
+                  <li><a href="editdevmode.php"> DevMode</a></li>
+                  <li class="active"><a href="editdeveloper.php"> Developer</a></li>
+                  <li><a href="editfront.php"> Frontend</a></li>
+                  <li><a href="editbackend.php"> Backend</a></li>
+                  <li><a href="editstatus.php"> Status</a></li>
                 </ul>
               </li>
 
@@ -135,16 +138,16 @@ if (isset($_GET['logout'])) {
                 <li><span>Management</span></li>
               </ul>
             </div>
-         
+
           </div>
-         
+
 
         </div>
       </div>
       <!-- page title area end -->
       <div>
 
-      
+
         <div class="main-content-inner">
           <div class="row">
 
@@ -157,7 +160,7 @@ if (isset($_GET['logout'])) {
                     <div class="table-responsive">
 
 
-                    
+
 
                       <h1 style="text-align:center">Management Edit</h1>
                       <div class="container1">
@@ -171,16 +174,7 @@ if (isset($_GET['logout'])) {
                           $dbname = "inventorymanagement";
                           $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-                          // Add function
-                          if (isset($_POST['add'])) {
-                            $name = $_POST['name'];
-                            $sql = "INSERT INTO subcategories (name) VALUES ('$name')";
-                            if (mysqli_query($conn, $sql)) {
-                              echo "Record added successfully.";
-                            } else {
-                              echo "Error: " . mysqli_error($conn);
-                            }
-                          }
+
 
                           // Delete function
                           if (isset($_GET['delete'])) {
@@ -201,6 +195,7 @@ if (isset($_GET['logout'])) {
                           $sql = "SELECT * FROM subcategories";
                           $result = mysqli_query($conn, $sql);
 
+
                           ?>
                           <!DOCTYPE html>
                           <html>
@@ -216,6 +211,7 @@ if (isset($_GET['logout'])) {
                                 <table>
                                   <tr>
                                     <th>Name</th>
+                                    <th>Category_ID </th>
                                     <th>Action</th>
                                   </tr>
                                   <?php while ($row = mysqli_fetch_array($result)) { ?>
@@ -224,7 +220,10 @@ if (isset($_GET['logout'])) {
                                         <?php echo $row['name']; ?>
                                       </td>
                                       <td>
-                                        <a href="editdeveloperphp?delete=<?php echo $row['id']; ?>"
+                                        <?php echo $row['category_id']; ?>
+                                      </td>
+                                      <td>
+                                        <a href="editdeveloper.php?delete=<?php echo $row['id']; ?>"
                                           onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
                                         <a href="editconfig_developer.php?id=<?php echo $row['id']; ?>">Edit</a>
                                       </td>
@@ -234,12 +233,63 @@ if (isset($_GET['logout'])) {
                               </div>
 
                               <div class="result-container">
-                                <h2>Add New Record to 'Developer'</h2>
-                                <form method="post" action="editdeveloperphp.php">
-                                  <label>Name:</label>
-                                  <input type="text" name="name" required><br><br>
-                                  <input type="submit" name="add" value="Add">
+                                <?php
+                                // Connect to database
+                                $conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
+                                if (!$conn) {
+                                  die('Could not connect: ' . mysqli_error());
+                                }
+
+                                if (isset($_POST['submit'])) {
+                                  $category_id = mysqli_real_escape_string($conn, $_POST['category_id']);
+                                  $subcategory_name = mysqli_real_escape_string($conn, $_POST['subcategory_name']);
+
+                                  // Check if the subcategory already exists in the database
+                                  $query = "SELECT * FROM subcategories WHERE name = '" . $subcategory_name . "' AND category_id = '" . $category_id . "'";
+                                  $result = mysqli_query($conn, $query);
+                                  if (mysqli_num_rows($result) > 0) {
+                                    echo "Subcategory already exists!";
+                                  } else {
+                                    // Insert the new subcategory into the database
+                                    $query = "INSERT INTO subcategories (name, category_id) VALUES ('" . $subcategory_name . "', '" . $category_id . "')";
+                                    if (mysqli_query($conn, $query)) {
+                                      echo "Subcategory added successfully!";
+
+                                    } else {
+                                      echo "Error adding subcategory: " . mysqli_error($conn);
+                                    }
+                                  }
+                                }
+                                ?>
+
+                                <form method="POST" action="editdeveloper.php">
+                                  <div class="mcat" <label for="category">Select a category &nbsp; : </label>
+                                    <select id="category" name="category_id" style="right">
+                                      <option disabled selected>Select Category...</option>
+
+                                      <?php
+                                      // Generate options for category dropdown list
+                                      $query = "SELECT * FROM categories";
+                                      $result = mysqli_query($conn, $query);
+                                      while ($row = mysqli_fetch_assoc($result)) {
+                                        echo "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+                                      }
+                                      ?>
+                                    </select>
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <div class="msubcat" <label for="subcategory">Subcategory name:</label>
+                                    <input type="text" id="subcategory" name="subcategory_name">
+
+                                    <input type="submit" name="submit" value="Add">
+                                  </div>
                                 </form>
+
                           </body>
                       </div>
                     </div>
@@ -340,7 +390,7 @@ if (isset($_GET['logout'])) {
     padding: 10px;
     box-sizing: border-box;
     border: 3px solid #ccc;
- 
+
   }
 
   .result-container {
@@ -352,121 +402,121 @@ if (isset($_GET['logout'])) {
   }
 
 
-    .button-submit {
-      display: inline-block;
-      background: #599B87;
-      color: #fff;
-      border: none;
-      width: auto;
-      margin: 5px;
-      padding: 10px 39px;
-      border-radius: 55px;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 55px;
-      -o-border-radius: 5px;
-      -ms-border-radius: 5px;
-      margin-top: 15px;
-      text-decoration: none;
-      cursor: pointer;
-    }
+  .button-submit {
+    display: inline-block;
+    background: #599B87;
+    color: #fff;
+    border: none;
+    width: auto;
+    margin: 5px;
+    padding: 10px 39px;
+    border-radius: 55px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 55px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    margin-top: 15px;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-    .button-submit:hover {
-      background: #3C685A;
-      text-decoration: none;
-      color: #fff;
-    }
+  .button-submit:hover {
+    background: #3C685A;
+    text-decoration: none;
+    color: #fff;
+  }
 
-    input[type=text],
-    select,
-    textarea {
-      width: 60%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      resize: vertical;
-      left: -40px;
-    }
+  input[type=text],
+  select,
+  textarea {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    left: -40px;
+  }
 
 
+  input[type=submit] {
+    background-color: #04AA6D;
+    color: white;
+    padding: 10px 16px;
+    width: 87%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: left;
+    position: relative;
+    top: 30px;
+  }
+
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
+
+  .container1 {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+
+    .col-25,
+    .col-75,
     input[type=submit] {
-      background-color: #04AA6D;
-      color: white;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      float: right;
-      position: relative;
-      left: -60px;
-      top: -70px;
+      width: 100%;
+      margin-top: 0;
     }
-
-    input[type=submit]:hover {
-      background-color: #45a049;
-    }
-
-    .container1 {
-      border-radius: 5px;
-      background-color: #f2f2f2;
-      padding: 20px;
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-      content: "";
-      display: table;
-      clear: both;
-    }
-
-    /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-    @media screen and (max-width: 600px) {
-
-      .col-25,
-      .col-75,
-      input[type=submit] {
-        width: 100%;
-        margin-top: 0;
-      }
-    }
+  }
 
 
 
-    .card {
-      position: relative;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-direction: column;
-      flex-direction: column;
-      width: 200%;
-      word-wrap: break-word;
-      background-color: #fff;
-      background-clip: border-box;
-      border: 1px solid rgba(0, 0, 0, 0.125);
-      border-radius: 0.25rem;
-    }
+  .card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 200%;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+  }
 
-    .button-submit {
-      display: inline-block;
-      background: #599B87;
-      color: #fff;
-      border-bottom: none;
-      width: auto;
-      padding: 10px 39px;
-      border-radius: 55px;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 55px;
-      -o-border-radius: 5px;
-      -ms-border-radius: 5px;
-      margin-top: 15px;
-      text-decoration: none;
-      cursor: pointer;
-    }
+  .button-submit {
+    display: inline-block;
+    background: #599B87;
+    color: #fff;
+    border-bottom: none;
+    width: auto;
+    padding: 10px 39px;
+    border-radius: 55px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 55px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    margin-top: 15px;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-    .button-submit:hover {
-      background: #3C685A;
-      text-decoration: none;
-      color: #fff;
-    }
+  .button-submit:hover {
+    background: #3C685A;
+    text-decoration: none;
+    color: #fff;
+  }
 </style>
 
 </html>

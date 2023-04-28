@@ -79,9 +79,12 @@ if (isset($_GET['logout'])) {
                 <a href="table.php" aria-expanded="true"><i class="bi bi-gear"></i>
                   <span>Management</span></a>
                 <ul class="collapse">
-                  <li class="active"><a href="editfront.php">Edit Frontend</a></li>
-                  <li><a href="table-layout.html">table layout</a></li>
-                  <li><a href="datatable.html">datatable</a></li>
+
+                  <li><a href="editdevmode.php"> DevMode</a></li>
+                  <li><a href="editdeveloper.php"> Developer</a></li>
+                  <li  class="active"><a href="editfront.php"> Frontend</a></li>
+                  <li><a href="editbackend.php"> Backend</a></li>
+                  <li><a href="editstatus.php"> Status</a></li>
                 </ul>
               </li>
 

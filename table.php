@@ -156,7 +156,7 @@
                     <div class="col-lg-6 mt-5">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="header-title">Products</h4>
+                              
                                 <div class="single-table" style="border-top: 0.5px solid black">
                                     <div class="table-responsive">
                                         <table class="table text-dark text-center">
@@ -170,7 +170,7 @@
 $mysqli = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
 
 // For extra protection these are the columns of which the user can sort by (in your database table).
-$columns = array('status');
+$columns = array('product_id');
 
 // Only get the column if it exists in the above columns array, if it doesn't exist the database table will be sorted by the first item in the columns array.
 $column = isset($_GET['column']) && in_array($_GET['column'], $columns) ? $_GET['column'] : $columns[0];
@@ -179,10 +179,8 @@ $column = isset($_GET['column']) && in_array($_GET['column'], $columns) ? $_GET[
 $sort_order = isset($_GET['order']) && strtolower($_GET['order']) == 'desc' ? 'DESC' : 'ASC';
 
 // Get the result...
-if ($result = $mysqli->query('SELECT * FROM products  WHERE IsDeleted = 0 ORDER BY ' .  $column . ' ' . $sort_order)) {
+if ($result = $mysqli->query('SELECT * FROM products WHERE IsDeleted = 0 ORDER BY ' .  $column . ' ' . $sort_order)) {
 	// Some variables we need for the table.
-	$up_or_down = str_replace(array('ASC','DESC'), array('up','down'), $sort_order); 
-	$asc_or_desc = $sort_order == 'ASC' ? 'desc' : 'asc';
 	$add_class = ' class="highlight"';
 	?>
 	<!DOCTYPE html>
@@ -196,11 +194,10 @@ if ($result = $mysqli->query('SELECT * FROM products  WHERE IsDeleted = 0 ORDER 
 			<table >
                 
 				<tr >
-                    <th scope="col">L Name</th>
-                    <th scope="col">S Name</th>
+                    <th scope="col">Project Name</th>
                     <th scope="col">Details</th>
-                    <th style="size =55px" scope="col">Implementing Office</th>                          
-					<th><a style="font-size: 100%; color: black; text-decoration: none; text-align: center;"href="table.php?column=status&order=<?php echo $asc_or_desc; ?>">Status<i class="fas fa-sort<?php echo $column == 'status' ? '-' . $up_or_down : ''; ?>"></i></a></th>
+                    <th style="size:55px" scope="col">Implementing Office</th> 
+                    <th scope="col">Status</th>                        
                     <th scope="col">Action</th>
                 </tr>
 				
@@ -209,10 +206,10 @@ if ($result = $mysqli->query('SELECT * FROM products  WHERE IsDeleted = 0 ORDER 
                 <?php while ($row = $result->fetch_assoc()): ?>
 				<tr>
                 <td><?php echo $row["product_name"] ?></td>
-                      <td ><?php echo $row["product_sname"] ?></td>
-                      <td><?php echo $row["details"]  ?></th>
-                      <td><?php echo $row["implementing_office"]  ?></td>
-					  <td style="background-color: white;"<?php echo $column == 'status' ? $add_class : ''; ?>><?php echo $row['status']; ?></td>
+                 
+                      <td><?php echo $row["details"]  ?></td>
+                      <td><?php echo $row["implementing_office"] ?></td>
+                      <td><?php echo $row["status"]  ?></td>
                       <td> <a href="up"Edit</a><a style="color: black; " href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a> <a href="up"Edit</a><a onclick='javascipt:confirmationDelete($(this));return false;' style="color: black;" href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a style="color: black;" href="read.php?id=<?php echo $row["product_id"] ?>"> View</a></td>
                     
 				</tr>
@@ -277,6 +274,7 @@ if ($result = $mysqli->query('SELECT * FROM products  WHERE IsDeleted = 0 ORDER 
 			}
 			table {
 				width: 100%;
+                table-layout: fixed;
 			}
 			th {
 				background-color: white;    
@@ -290,20 +288,21 @@ if ($result = $mysqli->query('SELECT * FROM products  WHERE IsDeleted = 0 ORDER 
 				display: block;
 				text-decoration:none;
 				padding: 30px;
-				color: #;
+				color: black;
 				font-weight: bold;
 				font-size: 13px;
                 
 			}
 			th a i {
 				margin-left: 15px;
-				color: # rgba(255,255,255,0.4);
+				color: rgba(255,255,255,0.4);
                 
 			}
 			td {
-				padding: 40px;
+				padding: 50px 10px;
 				color: black;
                 border: 0.5px solid black;
+                word-break: break-word;
                         
             
 			}

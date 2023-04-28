@@ -32,7 +32,9 @@ session_start();
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script language="javascript" type="text/javascript" name="developer">
+
     function dynamicdropdown(listindex) {
       switch (listindex) {
         case "In-house":
@@ -65,23 +67,23 @@ session_start();
     <form method="POST" action="additem.php">
       <div class="row">
         <div class="col-25">
-          <label for="fname">IS Long Name</label>
+          <label for="fname">Project Long name</label>
         </div>
         <div class="col-75">
-          <input type="text" name="product_name" placeholder="Long Name...">
+          <input type="text" name="product_name" placeholder="Project Long name...">
         </div>
       </div>
       <div class="row">
         <div class="col-25">
-          <label for="lname">IS Short Name</label>
+          <label for="lname">Project Short name</label>
         </div>
         <div class="col-75">
-          <input type="text" name="product_sname" placeholder="Short Name..">
+          <input type="text" name="product_sname" placeholder="Project Short Name..">
         </div>
       </div>
       <div class="row">
         <div class="col-25">
-          <label for="lname">IS Description</label>
+          <label for="lname"> Description</label>
         </div>
         <div class="col-75">
           <input type="text" name="details" placeholder="Description...">
@@ -89,7 +91,7 @@ session_start();
       </div>
       <div class="row">
         <div class="col-25">
-          <label for="lname">IS Implementing Office</label>
+          <label for="lname"> Implementing Office</label>
         </div>
         <div class="col-75">
           <input type="text" name="implementing_office" placeholder="Implementing Office..">
@@ -102,23 +104,34 @@ session_start();
         </div>
         <div class="col-75">
 
-          <select name="dev_mode" id="main_category">
-
+          <select id="category" name="dev_mode">
+            <option value="">Select Category</option>
             <?php
-            // Connect to database
-            $conn = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
-            if (!$conn) {
-              die('Could not connect: ' . mysqli_error());
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "inventorymanagement";
+
+            // Create connection
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            // Check connection
+            if ($conn->connect_error) {
+              die("Connection failed: " . $conn->connect_error);
             }
-            // Query main category table and generate options
-            $query = "SELECT * FROM categories";
-            $result = mysqli_query($conn, $query);
-            $options = '<option value="">Select Category</option>';
-            while ($row = mysqli_fetch_assoc($result)) {
-              $options .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+
+            $sql = "SELECT name FROM categories";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                echo "<option value='" . $row['name'] . "'>" . $row['name'] . "</option>";
+              }
+            } else {
+              echo "<option value=''>No categories found</option>";
             }
-            echo $options;
-            mysqli_close($conn);
+
+            $conn->close();
             ?>
           </select>
 
@@ -133,21 +146,30 @@ session_start();
         </div>
         <div class="col-75">
 
-          <select name="developer" id="sub_category">
-            <option value="" disabled selected>Select a subcategory</option>
+
+          <select id="subcategory" name="developer">
+            <option value="">Select Subcategory</option> 
           </select>
           <script>
             $(document).ready(function () {
-              $('#main_category').change(function () {
-                var mainCategoryId = $(this).val();
-                $.ajax({
-                  type: 'POST',
-                  url: 'get_subcategory.php',
-                  data: { 'category_id': mainCategoryId },
-                  success: function (response) {
-                    $('#sub_category').html(response);
-                  }
-                });
+              $("#category").change(function () {
+                var category = $("#category").val();
+                if (category) {
+                  $.ajax({
+                    type: 'GET',
+                    url: 'getSubcategories.php',
+                    data: { category: category },
+                    success: function (response) {
+                      $("#subcategory").html(response);
+                    },
+                    error: function (xhr, status, error) {
+                      console.log("An error occurred while fetching subcategories: " + error);
+                    }
+                  });
+                }
+                else {
+                  $("#subcategory").html('<option value="">Select Category first</option>');
+                }
               });
             });
           </script>
