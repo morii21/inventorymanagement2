@@ -322,7 +322,7 @@ if ($result = $mysqli->query('SELECT * FROM products WHERE IsDeleted = 0 ORDER B
   -ms-flex-direction: column;
   flex-direction: column;
   width: 200%;
-  word-wrap: break-word;
+  word-break: normal;
   background-color: lightgray;
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
