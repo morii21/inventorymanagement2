@@ -46,6 +46,7 @@ if (isset($_GET['logout'])) {
     text-align: center;
     vertical-align: middle
   }
+    
 </style>
 
 
@@ -70,26 +71,20 @@ if (isset($_GET['logout'])) {
       $add_class = ' class="highlight"';
       ?>
       <tr>
-        <th class="tg-nrix" rowspan="2">PROJECT / IS</th>
-        <th class="tg-nrix" colspan="2">DEVELOPMENT PLATFORM</th>
-        <th class="tg-nrix" rowspan="2">SERVERHOST<br>(On-Prem/Cloud)/<br>IP ADDRESS/ URL / STATUS</th>
+        <th class="tg-nrix" rowspan="2"><b>PROJECT / IS</b></th>
+        <th class="tg-nrix" colspan="2"><b>DEVELOPMENT PLATFORM</b></th>
+        <th class="tg-nrix" rowspan="2"><b>SERVERHOST<br>(On-Prem/Cloud)/<br>IP ADDRESS/ URL / STATUS</b></th>
       </tr>
       <tr>
-        <th class="tg-nrix">FRONT-END</th>
-        <th class="tg-nrix">BACK-END</th>
+        <th class="tg-nrix"><b>FRONT-END</b></th>
+        <th class="tg-nrix"><b>BACK-END</b></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="tg-nrix" colspan="4"> &nbsp;&nbsp;&nbsp;</td>
       </tr>
-      <tr>
-        <td class="tg-nrix"> </td>
-        <td class="tg-nrix"> </td>
-        <td class="tg-nrix"> </td>
-        <td class="tg-nrix"> </td>
-      </tr>
-
+     
       <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
           <td class="tg-nrix">
@@ -99,13 +94,13 @@ if (isset($_GET['logout'])) {
           <td class="tg-nrix">
             <?php echo $row["details"] ?>
           </td>
-          <td>
+          <td class="tg-nrix">
             <?php echo $row["implementing_office"] ?>
           </td>
-          <td>
+          <td class="tg-nrix">
             <?php echo $row["status"] ?>
           </td>
-          <td> <a href="up" Edit</a><a style="color: black; " href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a>
+          <td class="tg-nrix"> <a href="up" Edit</a><a style="color: black; " href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a>
               <a href="up" Edit</a><a onclick='javascipt:confirmationDelete($(this));return false;' style="color: black;"
                   href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a style="color: black;"
                   href="read.php?id=<?php echo $row["product_id"] ?>"> View</a></td>

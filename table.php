@@ -165,63 +165,77 @@
                                                     <!-- <th scope="col">ID</th> THIS IS ID -->
 
                                                    
-                                                    <?php
-// Below is optional, remove if you have already connected to your database.
-$mysqli = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
 
-// For extra protection these are the columns of which the user can sort by (in your database table).
-$columns = array('product_id');
 
-// Only get the column if it exists in the above columns array, if it doesn't exist the database table will be sorted by the first item in the columns array.
-$column = isset($_GET['column']) && in_array($_GET['column'], $columns) ? $_GET['column'] : $columns[0];
 
-// Get the sort order for the column, ascending or descending, default is ascending.
-$sort_order = isset($_GET['order']) && strtolower($_GET['order']) == 'desc' ? 'DESC' : 'ASC';
 
-// Get the result...
-if ($result = $mysqli->query('SELECT * FROM products WHERE IsDeleted = 0 ORDER BY ' .  $column . ' ' . $sort_order)) {
-	// Some variables we need for the table.
-	$add_class = ' class="highlight"';
-	?>
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="utf-8">
-			<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-			
-		</head>
-		<body>
-			<table >
-                
-				<tr >
-                    <th scope="col">Project Name</th>
-                    <th scope="col">Details</th>
-                    <th style="size:55px" scope="col">Implementing Office</th> 
-                    <th scope="col">Status</th>                        
-                    <th scope="col">Action</th>
-                </tr>
-				
-                
-                
-                <?php while ($row = $result->fetch_assoc()): ?>
-				<tr>
-                <td><?php echo $row["product_name"] ?></td>
-                 
-                      <td><?php echo $row["details"]  ?></td>
-                      <td><?php echo $row["implementing_office"] ?></td>
-                      <td><?php echo $row["status"]  ?></td>
-                      <td> <a href="up"Edit</a><a style="color: black; " href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a> <a href="up"Edit</a><a onclick='javascipt:confirmationDelete($(this));return false;' style="color: black;" href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a style="color: black;" href="read.php?id=<?php echo $row["product_id"] ?>"> View</a></td>
-                    
-				</tr>
-				<?php endwhile; ?>
-                
-			</table>
-		</body>
-	</html>
-	<?php
-	$result->free();
-}
-?>
+<table class="tg">
+  <thead>
+    <?php
+    // Below is optional, remove if you have already connected to your database.
+    $mysqli = mysqli_connect('localhost', 'root', '', 'inventorymanagement');
+
+    // For extra protection these are the columns of which the user can sort by (in your database table).
+    $columns = array('product_id');
+
+    // Only get the column if it exists in the above columns array, if it doesn't exist the database table will be sorted by the first item in the columns array.
+    $column = isset($_GET['column']) && in_array($_GET['column'], $columns) ? $_GET['column'] : $columns[0];
+
+    // Get the sort order for the column, ascending or descending, default is ascending.
+    $sort_order = isset($_GET['order']) && strtolower($_GET['order']) == 'desc' ? 'DESC' : 'ASC';
+
+    // Get the result...
+    if ($result = $mysqli->query('SELECT * FROM products WHERE IsDeleted = 0 ORDER BY ' . $column . ' ' . $sort_order)) {
+      // Some variables we need for the table.
+      $add_class = ' class="highlight"';
+      ?>
+      <tr>
+        <th class="tg-nrix" rowspan="2"><b>PROJECT / IS</b></th>
+        <th class="tg-nrix" colspan="2"><b>DEVELOPMENT PLATFORM</b></th>
+        <th class="tg-nrix" rowspan="2"><b>SERVERHOST<br>(On-Prem/Cloud)/<br>IP ADDRESS/ URL / STATUS</b></th>
+        <th class="tg-nrix" rowspan="2"><b> ACTION </b></th>
+      </tr>
+      <tr>
+        <th class="tg-nrix"><b>FRONT-END</b></th>   
+        <th class="tg-nrix"><b>BACK-END</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tg-nrix" colspan="5"  style="text-align: left; "><b> IN-HOUSE DEVELOPMENT </b></td>
+      </tr>
+     
+      <?php while ($row = $result->fetch_assoc()): ?>
+        <tr>
+          <td class="tg-nrix">
+          <b> <?php echo  $row["product_name"]." (" . $row["product_sname"] .")" ?></b>
+          </td>
+
+          <td class="tg-nrix">
+            <?php echo $row["frontend"] ?>
+          </td>
+          <td class="tg-nrix">
+            <?php echo $row["backend"] ?>
+          </td>
+          <td class="tg-nrix">
+            <?php echo $row["status"] ?>
+          </td>
+          <td class="tg-nrix"> <a href="up" Edit</a><a style="color: black; " href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a>
+              <a href="up" Edit</a><a onclick='javascipt:confirmationDelete($(this));return false;' style="color: black;"
+                  href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a style="color: black;"
+                  href="read.php?id=<?php echo $row["product_id"] ?>"> View</a></td>
+
+        </tr>
+      
+
+  
+      <?php endwhile; ?>
+    </tbody>
+  </table>
+  <?php
+  $result->free();
+    }
+    ?>
 
                     <!-- Contextual Classes end -->
                    
@@ -281,7 +295,7 @@ if ($result = $mysqli->query('SELECT * FROM products WHERE IsDeleted = 0 ORDER B
 				border: 1px solid black;
                 text-align: center;
                 padding: .1px;
-                background-color: #D8D8D8;
+              
 			}
 			
 			th a {
@@ -347,5 +361,42 @@ if ($result = $mysqli->query('SELECT * FROM products WHERE IsDeleted = 0 ORDER B
         background: #3C685A;
         text-decoration: none;
         color: #fff; }
+        .tg {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  .tg td {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 30px 15px;
+    word-break: normal;
+  }
+
+  .tg th {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    overflow: hidden;
+    padding: 30px 15px;
+    word-break: normal;
+    width: 29%
+    allign:
+  }
+
+  .tg .tg-nrix {
+    text-align: center;
+    vertical-align: middle
+  }
+    
 </style>
 </html>
+
+
