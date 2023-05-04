@@ -7,7 +7,8 @@ $details     = "";
 $implementing_office   = "";
 $dev_mode   = "";
 $developer   = "";
-$frontend   = "";
+$front   = "";
+$frontstr = "";
 $backend   = "";
 $status   = "";
 $remarks   = "";
@@ -23,14 +24,20 @@ $serverhid   = "";
   $details=mysqli_real_escape_string($db, $_POST['details']);
   $implementing_office=mysqli_real_escape_string($db, $_POST['implementing_office']);
   $dev_mode=mysqli_real_escape_string($db, $_POST['dev_mode']);
-  $developer=mysqli_real_escape_string($db, $_POST['developer']);
-  $frontend=mysqli_real_escape_string($db, $_POST['frontend']);
-  $backend=mysqli_real_escape_string($db, $_POST['backend']);
+  $developer=mysqli_real_escape_string($db, $_POST['developer']); 
+  $front = $_POST['frontend'];
+  $frontstr= implode(",",$front);
+
+  $back = $_POST['backend'];
+  $backstr= implode(",",$back);
+
   $status=mysqli_real_escape_string($db, $_POST['status']);
   $remarks=mysqli_real_escape_string($db, $_POST['remarks']);
   $serverhid=mysqli_real_escape_string($db, $_POST['serverhid']);
   
-  mysqli_query($db,"UPDATE products SET product_name='$product_name', product_sname='$product_sname' ,details='$details', implementing_office='$implementing_office', dev_mode='$dev_mode',developer='$developer',frontend='$frontend',backend='$backend',status='$status',remarks='$remarks',serverhid='$serverhid'
+  
+  
+  mysqli_query($db,"UPDATE products SET product_name='$product_name', product_sname='$product_sname' ,details='$details', implementing_office='$implementing_office', dev_mode='$dev_mode',developer='$developer',frontend='$frontstr',backend='$backstr',status='$status',remarks='$remarks',serverhid='$serverhid'
   WHERE product_id='$id'");
   
   header("Location:table.php");
@@ -117,8 +124,9 @@ $serverhid   = "";
 <h1 style="text-align:center">Edit Item Here</h1>
 <div class="container1">
 
-  <body>
-    <form method="POST" action="edit.php">
+<body>
+<form method="post" action="edit.php">
+<input type="hidden" name="id" value="<?php echo $id; ?>"/>
       <div class="row">
         <div class="col-25">
           <label for="fname">Project Long name</label>
@@ -323,10 +331,8 @@ $serverhid   = "";
       </div>
       <div class="row">
 
-        <button type="submit" class="button-submit" name="add">Add item</button>
-
-        <button type="button" class="button-submit" onclick="window.history.back();">Cancel</button>
-
+      <button type="button" class="button-submit" onclick="window.history.back();">Cancel</button>
+<button type="submit"  class="button-submit" name="submit">Edit Records</button>
     </form>
   </body>
 </div>

@@ -208,7 +208,7 @@
       <?php while ($row = $result->fetch_assoc()): ?>
         <tr>
           <td class="tg-nrix">
-          <b> <?php echo  $row["product_name"]." (" . $row["product_sname"] .")" ?></b>
+          <b> <?php echo  $row["product_name"]." (" . $row["product_sname"] .")" ?></b> <br> <br> <?php echo $row["details"]?>  <br> <br> <i>Implementing Office: &nbsp; <?php echo $row["implementing_office"] ?> </i> 
           </td>
 
           <td class="tg-nrix">
@@ -220,9 +220,9 @@
           <td class="tg-nrix">
             <?php echo $row["status"] ?>
           </td>
-          <td class="tg-nrix"> <a href="up" Edit</a><a style="color: black; " href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a>
-              <a href="up" Edit</a><a onclick='javascipt:confirmationDelete($(this));return false;' style="color: black;"
-                  href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a style="color: black;"
+          <td class="tg-nrix"> <a href="up" Edit</a><a  href="edit.php?id=<?php echo $row["product_id"] ?>">Edit</a>
+              <a href="up" Edit</a><a onclick='javascipt:confirmationDelete($(this));return false;' 
+                  href="delete.php?id=<?php echo $row["product_id"] ?>">Delete</a><a 
                   href="read.php?id=<?php echo $row["product_id"] ?>"> View</a></td>
 
         </tr>
@@ -392,8 +392,8 @@
   }
 
   .tg .tg-nrix {
-    text-align: center;
-    vertical-align: middle
+    text-align: left;
+    vertical-align: top;
   }
     
 </style>

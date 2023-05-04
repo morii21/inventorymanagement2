@@ -55,8 +55,11 @@ $serverhid   = "";
   $implementing_office=$row['implementing_office'];
   $dev_mode=$row['dev_mode'];
   $developer=$row['developer'];
-  $frontend=$row['frontend'];
-  $backend=$row['backend'];
+  $front=$row['frontend'];
+  $frontstr= implode(",",$front);
+  $back=$row['backend'];
+  $backstr= implode(",",$back);
+
   $status=$row['status'];
   $remarks=$row['remarks'];
   $serverhid=$row['serverhid'];
