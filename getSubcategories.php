@@ -25,6 +25,8 @@ if(isset($_GET['category'])){
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
+      // Add an empty option
+      echo "<option value=''>Select Subcategory</option>";
       while ($row = $result->fetch_assoc()) {
         echo "<option value='".$row['name']."'>".$row['name']."</option>";
       }

@@ -190,14 +190,14 @@
       $add_class = ' class="highlight"';
       ?>
       <tr>
-        <th class="tg-nrix" rowspan="2"><b>PROJECT / IS</b></th>
-        <th class="tg-nrix" colspan="2"><b>DEVELOPMENT PLATFORM</b></th>
-        <th class="tg-nrix" rowspan="2"><b>SERVERHOST<br>(On-Prem/Cloud)/<br>IP ADDRESS/ URL / STATUS</b></th>
-        <th class="tg-nrix" rowspan="2"><b> ACTION </b></th>
+        <th class="tg-nrix" rowspan="2" style=" text-align: center; vertical-align: middle;"><b>PROJECT / IS</b></th>
+        <th class="tg-nrix" colspan="2" style=" text-align: center; vertical-align: middle;"><b>DEVELOPMENT PLATFORM</b></th>
+        <th class="tg-nrix" rowspan="2" style=" text-align: center; vertical-align: middle;"><b>SERVERHOST<br>(On-Prem/Cloud)/<br>IP ADDRESS/ URL / STATUS</b></th>
+        <th class="tg-nrix" rowspan="2" style=" text-align: center; vertical-align: middle;"><b> ACTION </b></th>
       </tr>
       <tr>
-        <th class="tg-nrix"><b>FRONT-END</b></th>   
-        <th class="tg-nrix"><b>BACK-END</b></th>
+        <th class="tg-nrix" style=" text-align: center; vertical-align: middle;"><b>FRONT-END</b></th>   
+        <th class="tg-nrix" style=" text-align: center; vertical-align: middle;"><b>BACK-END</b></th>
       </tr>
     </thead>
     <tbody>

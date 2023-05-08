@@ -46,7 +46,7 @@ if (isset($_POST['add'])) {
   $dev_mode=mysqli_real_escape_string($db, $_POST['dev_mode']);
   $developer=mysqli_real_escape_string($db, $_POST['developer']); 
   $front = $_POST['frontend'];
-  $frontstr= implode(",",$front);
+  $frontstr= implode(",",$front); 
 
   $back = $_POST['backend'];
   $backstr= implode(",",$back);
